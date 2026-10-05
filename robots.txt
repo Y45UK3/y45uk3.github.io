@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://y45uk3.github.io/sitemap.xml

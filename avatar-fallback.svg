@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" role="img" aria-label="Y45UK3">
+  <defs>
+    <radialGradient id="g" cx="50%" cy="38%" r="70%">
+      <stop offset="0" stop-color="#17263c"/>
+      <stop offset="1" stop-color="#07101d"/>
+    </radialGradient>
+    <linearGradient id="a" x1="0" x2="1">
+      <stop offset="0" stop-color="#e30118"/>
+      <stop offset="1" stop-color="#2949ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="480" height="480" rx="240" fill="url(#g)"/>
+  <circle cx="240" cy="240" r="204" fill="none" stroke="#32425b" stroke-width="2" stroke-dasharray="7 11"/>
+  <circle cx="240" cy="240" r="170" fill="none" stroke="url(#a)" stroke-width="3" opacity=".72"/>
+  <text x="240" y="230" text-anchor="middle" fill="#f4f7fb" font-family="Arial, sans-serif" font-size="62" font-weight="800" letter-spacing="8">Y45UK3</text>
+  <text x="240" y="278" text-anchor="middle" fill="#8292a9" font-family="Arial, sans-serif" font-size="17" font-weight="700" letter-spacing="5">OPERATIONS × TECHNOLOGY</text>
+</svg>
