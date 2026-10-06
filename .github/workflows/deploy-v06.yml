@@ -2,14 +2,16 @@ name: One-time portfolio v0.6 deploy
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+    paths:
+      - ".github/workflows/deploy-v06.yml"
 
 permissions:
   contents: write
 
 jobs:
   publish:
-    if: github.event.head_commit.message == 'chore: one-time v0.6 deploy'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
