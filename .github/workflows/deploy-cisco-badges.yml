@@ -1,0 +1,41 @@
+name: One-time Cisco badges deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/deploy-cisco-badges.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      ARTIFACT_URL: "https://sdmntprnznorth.oaiusercontent.com/files/00000000-17b4-820b-9242-95172f24b5f0/raw?se=2026-10-06T16%3A01%3A32Z&sp=r&sv=2026-02-06&sr=b&scid=7a524fc5-6eed-50e6-ad3c-72798e190356&skoid=8cb40e9f-389f-4cf6-afaa-e5bd4c7fd98c&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-06T02%3A27%3A08Z&ske=2026-10-07T02%3A27%3A08Z&sks=b&skv=2026-02-06&sig=e5eYi/MuRkjeiPejMMxe%2BzwSc49ANbSN9w0VQ6lxZuc%3D"
+    steps:
+      - name: Checkout deployment repository
+        uses: actions/checkout@v4
+
+      - name: Download tested production artifact
+        run: curl -LfsS "$ARTIFACT_URL" -o /tmp/portfolio.zip
+
+      - name: Replace public production files
+        shell: bash
+        run: |
+          set -euo pipefail
+          find . -mindepth 1 -maxdepth 1 ! -name .git ! -name .github -exec rm -rf {} +
+          unzip -q /tmp/portfolio.zip -d .
+          touch .nojekyll
+
+      - name: Commit production build
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "feat: display official Cisco credential badges"
+          git push
