@@ -1,0 +1,47 @@
+name: Deploy portfolio v0.7
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/deploy-v0.7.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout public deployment repo
+        uses: actions/checkout@v4
+
+      - name: Download tested production artifact
+        run: |
+          set -euo pipefail
+          curl -LfsS 'https://sdmntpraustraliaeast.oaiusercontent.com/files/00000000-5a34-81fa-aede-c90583ee0350/raw?se=2026-10-07T04%3A36%3A45Z&sp=r&sv=2026-02-06&sr=b&scid=a43bf341-2b10-514a-82f1-55ee80c04b95&skoid=8cb40e9f-389f-4cf6-afaa-e5bd4c7fd98c&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-07T01%3A14%3A57Z&ske=2026-10-08T01%3A14%3A57Z&sks=b&skv=2026-02-06&sig=4OWfAa29YRhryJIhRexgWmCNybfqLv1ydLQF9oup4Zw%3D' -o /tmp/portfolio-dist.zip
+          echo "932d87ac9ba49bcb4685c5b3810045bfe58b28b57b1aace20ed1ecd39db17afa  /tmp/portfolio-dist.zip" | sha256sum -c -
+
+      - name: Replace deployment with exact artifact
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/portfolio-dist
+          mkdir -p /tmp/portfolio-dist
+          unzip -q /tmp/portfolio-dist.zip -d /tmp/portfolio-dist
+          find . -mindepth 1 -maxdepth 1 ! -name .git ! -name .github -exec rm -rf {} +
+          cp -a /tmp/portfolio-dist/. .
+          touch .nojekyll
+
+      - name: Commit production build
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No deployment changes."
+            exit 0
+          fi
+          git commit -m "deploy: portfolio v0.7.0"
+          git push
